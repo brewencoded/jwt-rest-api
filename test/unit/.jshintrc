@@ -1,0 +1,11 @@
+{
+    "node": true,
+    "mocha": true,
+    "esversion": 6,
+    "bitwise": false,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "undef": true,
+    "unused": true
+}

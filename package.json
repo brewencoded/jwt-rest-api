@@ -1,0 +1,38 @@
+{
+  "name": "jwt-refresh-key-hash",
+  "version": "0.1.0",
+  "description": "Json web token auth with refresh tokens and hashed api keys",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run mocha:unit && npm run mocha:integration && npm run mocha:e2e",
+    "test:watch": "npm run mocha:unit:watch && npm run mocha:integration:watch && npm run mocha:e2e:watch",
+    "mocha:e2e": "npm run lint && mocha ./test/e2e --reporter spec",
+    "mocha:e2e:watch": "npm run lint && mocha ./test/e2e --reporter spec --watch ./api/**/*.js",
+    "mocha:unit": "npm run lint && mocha ./test/unit --reporter spec",
+    "mocha:unit:watch": "npm run lint && mocha ./test/unit --reporter spec --watch ./api/**/*.js",
+    "mocha:integration": "npm run lint && mocha ./test/integration --reporter spec",
+    "mocha:integration:watch": "npm run lint && mocha ./test/integration --reporter spec --watch ./api/**/*.js",
+    "lint": "jshint --reporter=node_modules/jshint-stylish '/api/**/*.js'"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "basic-auth": "^1.0.4",
+    "bcrypt": "^0.8.6",
+    "body-parser": "^1.15.1",
+    "bookshelf": "^0.9.5",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^7.0.0",
+    "knex": "^0.11.5",
+    "node-uuid": "^1.4.7",
+    "sqlite3": "^3.1.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.0",
+    "mocha": "^2.5.3",
+    "supertest": "^1.2.0"
+  }
+}
