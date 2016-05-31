@@ -12,7 +12,7 @@
     "mocha:unit:watch": "npm run lint && mocha ./test/unit --reporter spec --watch ./api/**/*.js",
     "mocha:integration": "npm run lint && mocha ./test/integration --reporter spec",
     "mocha:integration:watch": "npm run lint && mocha ./test/integration --reporter spec --watch ./api/**/*.js",
-    "lint": "jshint --reporter=node_modules/jshint-stylish '/api/**/*.js'"
+    "lint": "jshint --reporter=node_modules/jshint-stylish './api/**/*.js'"
   },
   "author": "",
   "license": "MIT",
