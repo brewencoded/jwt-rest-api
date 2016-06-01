@@ -6,6 +6,7 @@ const chai = require('chai'),
 
 chai.use(chaiAsPromised);
 
+
 describe('Text hashing', function () {
     const saltRounds = 10;
     const plainText = 'testString';
@@ -14,8 +15,12 @@ describe('Text hashing', function () {
         const hashResult = hash.createHash(plainText, saltRounds)
         .then(function (response) {
             const matches = bcrypt.compareSync(plainText, response);
-            expect(matches).to.be.true;
-            done();
+            try {
+                expect(matches).to.be.true;
+                done();
+            } catch(e) {
+                done(e);
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -24,7 +29,7 @@ describe('Text hashing', function () {
     });
 });
 
-describe('Text comparison', function () {
+describe('Text hash comparison', function () {
     let hashedText;
     const saltRounds = 10;
     const plainText = 'testString';
