@@ -1,7 +1,6 @@
-const hash = require('../auth/hash');
+//const hash = require('../auth/hash');
 
 module.exports = {
     create: function () {
-
     }
-}
+};

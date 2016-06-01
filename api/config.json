@@ -1,3 +1,10 @@
 {
-    "secret": "H519sgBwm5gXz7t6ktWQW102SQ2Ej3n2"
+    "secret": "H519sgBwm5gXz7t6ktWQW102SQ2Ej3n2",
+    "db": {
+        "client": "sqlite3",
+        "connection": {
+            "filename": "./db.sqlite"
+        },
+        "useNullAsDefault": true
+    }
 }
