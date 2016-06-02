@@ -12,7 +12,6 @@
         "pool": {
             "min": 2,
             "max": 10
-        },
-        "migrations": "knex_migrations"
+        }
     }
 }

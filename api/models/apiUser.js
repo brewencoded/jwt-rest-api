@@ -1,21 +1,26 @@
-const DB = require('./db'),
-    Promise = require('bluebird'),
+const bookshelf = require('./db'),
     hash = require('../auth/hash');
 
-const ApiUser = DB.Model.extend({
+require('./apiOrder');
+
+const ApiUser = bookshelf.Model.extend({
     tableName: 'ApiUsers',
     hashTimestamps: true,
-    idAttribute: "id",
     initialize: function () {
         this.on('creating', this.hashPassword, this);
     },
-    hashPassword: function (model, attrs, options) {
+    hashPassword: function (model) {
         return hash.createHash(model.attributes.password, 10)
             .then((hash) => {
                 model.set('password', hash);
             })
-            .catch((err) -> {
+            .catch((err) => {
                 throw new Error(err);
             });
+    },
+    orders: function () {
+        return this.hasMany('ApiOrder', 'api_id');
     }
 });
+
+module.exports = bookshelf.model('ApiUser', ApiUser);

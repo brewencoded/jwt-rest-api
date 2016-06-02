@@ -18,13 +18,13 @@ knex.schema
     })
     .createTable('ApiOrders', (table) => {
         table.increments('transaction_id').primary();
-        table.string('api_id').notNullable().references('api_id').inTable('ApiUsers').onDelete('CASCADE');
+        table.string('api_id').notNullable().references('api_id').inTable('ApiUsers').onDelete('CASCADE').onUpdate('CASCADE');
         table.timestamps();
         table.engine('InnoDB');
     })
     .createTable('ApiOrderItems', (table) => {
         table.increments('id').primary();
-        table.integer('transaction_id').unsigned().notNullable().references('transaction_id').inTable('ApiOrders').onDelete('CASCADE');
+        table.integer('transaction_id').unsigned().notNullable().references('transaction_id').inTable('ApiOrders').onDelete('CASCADE').onUpdate('CASCADE');
         table.string('name');
         table.float('price');
         table.integer('quantity');
