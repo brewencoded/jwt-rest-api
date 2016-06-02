@@ -1,10 +1,18 @@
 {
     "secret": "H519sgBwm5gXz7t6ktWQW102SQ2Ej3n2",
     "db": {
-        "client": "sqlite3",
+        "client": "mysql",
         "connection": {
-            "filename": "./db.sqlite"
+            "host": "127.0.0.1",
+            "user": "root",
+            "password": "Password",
+            "database": "api",
+            "charset": "utf8"
         },
-        "useNullAsDefault": true
+        "pool": {
+            "min": 2,
+            "max": 10
+        },
+        "migrations": "knex_migrations"
     }
 }
