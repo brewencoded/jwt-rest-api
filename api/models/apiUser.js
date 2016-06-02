@@ -5,14 +5,14 @@ require('./apiOrder');
 
 const ApiUser = bookshelf.Model.extend({
     tableName: 'ApiUsers',
-    hashTimestamps: true,
+    hasTimestamps: true,
     initialize: function () {
-        this.on('creating', this.hashPassword, this);
+        this.on('creating', this.hashApiKey, this);
     },
-    hashPassword: function (model) {
-        return hash.createHash(model.attributes.password, 10)
+    hashApiKey: function (model) {
+        return hash.createHash(model.attributes.key, 10)
             .then((hash) => {
-                model.set('password', hash);
+                model.set('key', hash);
             })
             .catch((err) => {
                 throw new Error(err);

@@ -7,27 +7,34 @@ const knex = require('knex')({
 knex.schema
     .createTable('ApiUsers', (table) => {
         table.increments('id').primary();
-        table.string('api_id').unique();
+        table.string('api_id').unique().notNullable();
         table.string('key').notNullable();
-        table.string('jti').notNullable();
         table.string('email').notNullable();
         table.string('phone');
         table.string('name').notNullable();
-        table.timestamps();
+        table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
+        table.timestamp('updated_at').notNullable().defaultTo(knex.raw('now()'));
         table.engine('InnoDB');
     })
     .createTable('ApiOrders', (table) => {
         table.increments('transaction_id').primary();
         table.string('api_id').notNullable().references('api_id').inTable('ApiUsers').onDelete('CASCADE').onUpdate('CASCADE');
-        table.timestamps();
+        table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
+        table.timestamp('updated_at').notNullable().defaultTo(knex.raw('now()'));
         table.engine('InnoDB');
     })
     .createTable('ApiOrderItems', (table) => {
         table.increments('id').primary();
         table.integer('transaction_id').unsigned().notNullable().references('transaction_id').inTable('ApiOrders').onDelete('CASCADE').onUpdate('CASCADE');
-        table.string('name');
-        table.float('price');
-        table.integer('quantity');
+        table.string('name').notNullable();
+        table.float('price').notNullable();
+        table.integer('quantity').notNullable();
+        table.engine('InnoDB');
+    })
+    .createTable('TokenBlackList', (table) => {
+        table.increments('id').primary();
+        table.string('jti').unique().notNullable();
+        table.dateTime('expires').notNullable();
         table.engine('InnoDB');
     })
     .then((results) => {
