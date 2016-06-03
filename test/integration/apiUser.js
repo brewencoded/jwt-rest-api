@@ -14,17 +14,7 @@ describe('ApiUser model', function () {
         name = 'test testerson';
     describe('ApiUser creation', function () {
         after(function (done) {
-            knex.del()
-                .from('ApiUsers')
-                .where({
-                    api_id: api_id
-                })
-                .then(() => {
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                })
+            deleteUser(api_id, done);
         });
         it('should create a new user in the database', function (done) {
             ApiUser.forge({
@@ -59,33 +49,16 @@ describe('ApiUser model', function () {
         const updatedEmail = 'test1@test.com',
             updateName = 'test1 testerson1';
         before(function (done) {
-            knex.insert({
+            createUser({
                     api_id: api_id,
                     key: key,
                     email: email,
                     name: name,
                     phone: ''
-                })
-                .into('ApiUsers')
-                .then(() => {
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                });
+                }, done);
         });
         after(function (done) {
-            knex.del()
-                .from('ApiUsers')
-                .where({
-                    api_id: api_id
-                })
-                .then(() => {
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                })
+            deleteUser(api_id, done);
         });
         it('should update a user\'s information in the database', function (done) {
             ApiUser.forge({
@@ -124,33 +97,16 @@ describe('ApiUser model', function () {
     });
     describe('ApiUser Read', function () {
         before(function (done) {
-            knex.insert({
+            createUser({
                     api_id: api_id,
                     key: key,
                     email: email,
                     name: name,
                     phone: ''
-                })
-                .into('ApiUsers')
-                .then(() => {
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                });
+                }, done);
         });
         after(function (done) {
-            knex.del()
-                .from('ApiUsers')
-                .where({
-                    api_id: api_id
-                })
-                .then(() => {
-                    done();
-                })
-                .catch((err) => {
-                    done(err);
-                })
+            deleteUser(api_id, done);
         });
         it('should read a created user\'s data from the database', function (done) {
             ApiUser.forge({
@@ -175,3 +131,28 @@ describe('ApiUser model', function () {
         });
     });
 });
+
+function createUser(user, done) {
+    knex.insert(user)
+        .into('ApiUsers')
+        .then(() => {
+            done();
+        })
+        .catch((err) => {
+            done(err);
+        });
+}
+
+function deleteUser(api_id, done) {
+    knex.del()
+        .from('ApiUsers')
+        .where({
+            api_id: api_id
+        })
+        .then(() => {
+            done();
+        })
+        .catch((err) => {
+            done(err);
+        });
+}
