@@ -1,4 +1,4 @@
 module.exports = {
-    create: function () {
+    create: function (/*user, request, response*/) {
     }
 };
