@@ -60,7 +60,7 @@ describe('ApiUser model', function () {
         after(function (done) {
             deleteUser(api_id, done);
         });
-        it('should update a user\'s information in the database', function (done) {
+        it('should update an existing user\'s information in the database', function (done) {
             ApiUser.forge({
                 api_id: api_id
             })
@@ -71,7 +71,7 @@ describe('ApiUser model', function () {
                     name: updateName
                 },
                 {
-                    patch: 'true'
+                    patch: true
                 });
             })
             .then(() => {
