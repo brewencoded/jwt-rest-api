@@ -5,7 +5,8 @@ const chai = require('chai'),
         client: db.client,
         connection: db.connection
     }),
-    ApiUser = require('../../api/models/apiUser');
+    ApiUser = require('../../api/models/apiUser'),
+    moment = require('moment');
 
 describe('ApiUser model', function () {
     const api_id = 'testId',
@@ -39,7 +40,8 @@ describe('ApiUser model', function () {
     });
     describe('ApiUser update', function () {
         const updatedEmail = 'test1@test.com',
-            updateName = 'test1 testerson1';
+            updateName = 'test1 testerson1',
+            date = moment().format("YYYY-MM-DD HH:mm:ss");
         before((done) => createUser({
                     api_id: api_id,
                     key: key,
@@ -56,7 +58,9 @@ describe('ApiUser model', function () {
             .then((model) => {
                 return model.save({
                     email: updatedEmail,
-                    name: updateName
+                    name: updateName,
+                    disabled: true,
+                    disabled_at: date
                 },
                 {
                     patch: true

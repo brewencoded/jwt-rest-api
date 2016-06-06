@@ -7,7 +7,7 @@ const chai = require('chai'),
 describe('JSON Web Token authentication', function () {
     describe('JWT creation', function () {
         it('should produce a three part string separated by periods', function (done) {
-            jwt.createToken()
+            jwt.createToken('testId')
             .then((token) => {
                 let length = token.split('.').length;
                 try {
@@ -24,7 +24,7 @@ describe('JSON Web Token authentication', function () {
         let validToken;
         let invalidToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
         before(function (done) {
-            jwt.createToken()
+            jwt.createToken('testId')
             .then((token) => {
                 validToken = token;
                 done();

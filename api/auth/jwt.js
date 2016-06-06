@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken'),
 // TODO: add scopes object to payload giving public, private, or admin access.
 
 module.exports = {
-    createToken: function (hasId) {
+    createToken: function (apiId, hasId) {
         let options;
 
         if (hasId) { // for refresh token
@@ -22,6 +22,7 @@ module.exports = {
 
         const tokenPromise = new Promise(function (resolve) {
             jwt.sign({ // create json web token
+                apiId: apiId
             },
             SECRET,
             options,
