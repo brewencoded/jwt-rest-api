@@ -3,7 +3,7 @@
 **/
 
 const express = require('express'),
-    privRouter = express.Router(),
+    pubRouter = express.Router(),
     bodyParser = require('body-parser'),
     path = require('path');
 
@@ -12,7 +12,7 @@ const express = require('express'),
 **/
 
 // public api
-require('')
+// require('./api/routes/apiUsers')(pubRouter);
 
 // TODO: private api
 
@@ -40,7 +40,7 @@ app.use(bodyParser.json())
 **/
 
 // api routes
-app.use('/api/public/v1', privRouter);
+app.use('/api/public/v1', pubRouter);
 // TODO: app.use('/api/private/v1', pubRouter);
 
 // all other routes not specified will be handled as a 404
