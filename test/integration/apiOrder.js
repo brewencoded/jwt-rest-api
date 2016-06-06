@@ -64,7 +64,7 @@ describe('ApiOrder model', function () {
     describe('ApiOrder update', function () {
         before((done) => createOrder(api_id, done));
         after((done) => deleteOrder(api_id, done));
-        it('should update an existing user\'s information in the database', function (done) {
+        it('should update an existing order\'s information in the database', function (done) {
             ApiOrder.forge({
                 api_id: api_id
             })
