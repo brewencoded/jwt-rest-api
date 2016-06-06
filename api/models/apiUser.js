@@ -6,6 +6,7 @@ require('./apiOrder');
 const ApiUser = bookshelf.Model.extend({
     tableName: 'ApiUsers',
     hasTimestamps: true,
+    idAttribute: 'id',
     initialize: function () {
         this.on('creating', this.hashApiKey, this);
     },
