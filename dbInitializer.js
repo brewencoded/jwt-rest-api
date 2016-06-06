@@ -8,6 +8,7 @@ const knex = require('knex')({
 * Prerequisite: create a database as specified in /api/config.json or modify the file to fit your setup
 **/
 
+console.log('building database...');
 knex.schema
     .createTable('ApiUsers', (table) => {
         table.increments('id').primary();
