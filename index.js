@@ -5,19 +5,24 @@
 const express = require('express'),
     pubRouter = express.Router(),
     bodyParser = require('body-parser'),
-    path = require('path');
+    path = require('path'),
+    PORT = 3000;
 
 /**
 * routes
 **/
 
 // public api
-// require('./api/routes/apiUsers')(pubRouter);
+
+// public auth routes
+require('./api/routes/auth')(pubRouter);
+// users routes
+require('./api/routes/apiUsers')(pubRouter);
 
 // TODO: private api
 
 // default port where dev server listens for incoming traffic
-const port = process.env.PORT || config.PORT;
+const port = process.env.PORT || PORT;
 
 // define the express application
 const app = express();
@@ -56,7 +61,7 @@ const server = app.listen(port, function (err) {
         console.log(err);
         return;
     }
-    console.log('\nListening at http://localhost:' + config.PORT + '\n');
+    console.log('\nListening at http://localhost:' + PORT + '\n');
 });
 
 module.exports = server;

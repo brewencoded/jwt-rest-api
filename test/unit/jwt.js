@@ -44,8 +44,16 @@ describe('JSON Web Token authentication', function () {
         });
         it('should reject invalid tokens', function (done) {
             jwt.validateToken(invalidToken)
-            .then((error) => {
+            .then((decoded) => {
                 try {
+                    expect(decoded).to.be.undefined;
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            })
+            .catch((error) => {
+                try{
                     expect(error).to.be.a('object');
                     expect(error).to.have.property('message');
                     done();

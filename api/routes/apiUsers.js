@@ -3,19 +3,26 @@ const ApiUser = require('../../api/models/apiUser'),
     moment = require('moment');
 
 module.exports = function (router) {
+    /**
+    * middleware
+    **/
+    // TODO: token auth
+    router.use('/user', function (req, res, next) {
+        next();
+    });
+    // input Validation
+    router.get('/user', function (req, res, next) {
+        const rejected = validator.rejectArgs('user', req.body.updates);
+        if(rejected) {
+            res.status(503).json({
+                message: 'You do not have permission to alter your id or api key. Contact support if you wish to do so.'
+            });
+        }  else {
+            next();
+        }
+    });
+
     router.route('/user')
-        .all(function (req, res, next) {
-            if(req.method.toLowerCase() === 'put') {
-                const rejected = validator.rejectArgs('user', req.body.updates);
-                if(rejected) {
-                    res.status(503).json({
-                        message: 'You do not have permission to alter your id or api key. Contact support if you wish to do so.'
-                    });
-                }  else {
-                    next();
-                }
-            }
-        })
         .get(function (req, res) {
             if(req.query && req.query.api_id) {
                 ApiUser.forge({

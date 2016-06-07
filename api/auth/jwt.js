@@ -5,30 +5,32 @@ const jwt = require('jsonwebtoken'),
 // TODO: add scopes object to payload giving public, private, or admin access.
 
 module.exports = {
-    createToken: function (apiId, hasId) {
+    createToken: function (apiId, hasId, scopes) {
         let options;
 
         if (hasId) { // for refresh token
             options = {
                 jwtid: uuid.v4(),
-                issuer: 'http://divvee.com'
+                issuer: 'http://divvee.com',
+                expiresIn: '7d'
             };
         } else { // for access token
             options = {
-                expiresIn: '1hr',
+                expiresIn: '15m',
                 issuer: 'http://divvee.com'
             };
         }
 
-        const tokenPromise = new Promise(function (resolve) {
+        const tokenPromise = new Promise(function (resolve, reject) {
             jwt.sign({ // create json web token
-                apiId: apiId
+                apiId: apiId,
+                scopes: scopes
             },
             SECRET,
             options,
             (err, token) => {
                 if (err) {
-                    resolve(err);
+                    reject(err);
                 } else {
                     resolve(token);
                 }
@@ -38,10 +40,10 @@ module.exports = {
         return tokenPromise;
     },
     validateToken: function (token) {
-        const tokenPromise = new Promise(function (resolve) {
+        const tokenPromise = new Promise(function (resolve, reject) {
             jwt.verify(token, SECRET, (err, decoded) => {
                 if (err) {
-                    resolve(err);
+                    reject(err);
                 } else {
                     resolve(decoded);
                 }
