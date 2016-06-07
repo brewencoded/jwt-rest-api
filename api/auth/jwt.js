@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken'),
     SECRET = require('../config').secret,
     uuid = require('node-uuid');
 
-// TODO: add scopes object to payload giving public, private, or admin access.
-
 module.exports = {
     createToken: function (apiId, hasId, scopes) {
         let options;

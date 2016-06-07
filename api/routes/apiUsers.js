@@ -1,6 +1,7 @@
-const ApiUser = require('../../api/models/apiUser'),
+const ApiUser = require('../models/apiUser'),
     validator = require('../util/inputValidation'),
-    moment = require('moment');
+    moment = require('moment'),
+    jwt = require('../auth/jwt');
 
 module.exports = function (router) {
     /**
@@ -8,13 +9,24 @@ module.exports = function (router) {
     **/
     // TODO: token auth
     router.use('/user', function (req, res, next) {
-        next();
+        const token = req.headers.authorization.split(' ')[1];
+        jwt.validateToken(token)
+        .then((decoded) => {
+            if(decoded) {
+                req.decoded = decoded;
+                next();
+            } else {
+                res.status(401).json({
+                    message: 'Invalid token'
+                });
+            }
+        });
     });
     // input Validation
-    router.get('/user', function (req, res, next) {
+    router.put('/user', function (req, res, next) {
         const rejected = validator.rejectArgs('user', req.body.updates);
         if(rejected) {
-            res.status(503).json({
+            res.status(403).json({
                 message: 'You do not have permission to alter your id or api key. Contact support if you wish to do so.'
             });
         }  else {
