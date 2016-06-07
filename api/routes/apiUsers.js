@@ -7,7 +7,6 @@ module.exports = function (router) {
     /**
     * middleware
     **/
-    // TODO: token auth
     router.use('/user', function (req, res, next) {
         const token = req.headers.authorization.split(' ')[1];
         jwt.validateToken(token)
@@ -20,6 +19,12 @@ module.exports = function (router) {
                     message: 'Invalid token'
                 });
             }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: 'Something went wrong. If you are receiving this message please contact the maintainer.',
+                error: err
+            });
         });
     });
     // input Validation
