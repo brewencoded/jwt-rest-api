@@ -39,6 +39,9 @@ module.exports = function (router) {
         }
     });
 
+    /**
+    * route logic
+    **/
     router.route('/user')
         .get(function (req, res) {
             if(req.query && req.query.api_id) {
@@ -48,13 +51,23 @@ module.exports = function (router) {
                 .fetch()
                 .then((model) => {
                     const attrs = model.attributes;
-                    res.status(200).json({
-                        api_id: attrs.api_id,
-                        name: attrs.name,
-                        phone: attrs.phone,
-                        email: attrs.email,
-                        created: attrs.created_at
-                    });
+                    if (req.query.apiId !== req.decoded.apiId) {
+                        res.status(403).json({
+                            message: 'You do not have permission to access this user'
+                        });
+                    } else if (!model) {
+                        res.status(404).json({
+                            message: "User does not exist"
+                        });
+                    } else {
+                        res.status(200).json({
+                            api_id: attrs.api_id,
+                            name: attrs.name,
+                            phone: attrs.phone,
+                            email: attrs.email,
+                            created: attrs.created_at
+                        });
+                    }
                 })
                 .catch((err) => {
                     serverError(res, err);
@@ -70,10 +83,16 @@ module.exports = function (router) {
                 })
                 .fetch()
                 .then((model) => {
-                    return model.save(req.body.updates,
-                    {
-                        patch: true
-                    });
+                    if(!model || !model.attributes || !model.attributes.api_id) {
+                        throw new Error('User does not exist');
+                    } else if (req.decoded.apiId !== model.attributes.api_id) {
+                        throw new Error('You do not have permission to access this user');
+                    } else {
+                        return model.save(req.body.updates,
+                        {
+                            patch: true
+                        });
+                    }
                 })
                 .then(() => {
                     res.status(200).json({
@@ -81,7 +100,20 @@ module.exports = function (router) {
                     });
                 })
                 .catch((err) => {
-                    serverError(res, err);
+                    switch (err.message) {
+                        case 'You do not have permission to access this user':
+                            res.status(403).json({
+                                message: err.message
+                            });
+                            break;
+                        case 'User does not exist':
+                            res.status(404).json({
+                                message: err.message
+                            });
+                            break;
+                        default:
+                            serverError(res, err);
+                    }
                 });
             } else {
                 missingParams(res);
@@ -94,13 +126,19 @@ module.exports = function (router) {
                 })
                 .fetch()
                 .then((model) => {
-                    return model.save({
-                        disabled: true,
-                        disabled_at: moment().format("YYYY-MM-DD HH:mm:ss")
-                    },
-                    {
-                        patch: true
-                    });
+                    if(!model || !model.attributes || !model.attributes.api_id) {
+                        throw new Error('User does not exist');
+                    } else if (req.decoded.apiId !== req.body.api_id) {
+                        throw new Error('You do not have permission to access this user');
+                    } else {
+                        return model.save({
+                            disabled: true,
+                            disabled_at: moment().format("YYYY-MM-DD HH:mm:ss")
+                        },
+                        {
+                            patch: true
+                        });
+                    }
                 })
                 .then(() => {
                     res.status(200).json({
@@ -108,7 +146,20 @@ module.exports = function (router) {
                     });
                 })
                 .catch((err) => {
-                    serverError(res, err);
+                    switch (err.message) {
+                        case 'You do not have permission to access this user':
+                            res.status(403).json({
+                                message: err.message
+                            });
+                            break;
+                        case 'User does not exist':
+                            res.status(404).json({
+                                message: err.message
+                            });
+                            break;
+                        default:
+                            serverError(res, err);
+                    }
                 });
             } else {
                 missingParams(res);

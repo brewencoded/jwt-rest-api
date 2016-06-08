@@ -38,6 +38,8 @@ knex.schema
         table.string('size');
         table.float('price').notNullable();
         table.integer('quantity').notNullable();
+        table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
+        table.timestamp('updated_at').notNullable().defaultTo(knex.raw('now()'));
         table.engine('InnoDB');
     })
     .createTable('TokenBlackList', (table) => {

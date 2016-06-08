@@ -51,12 +51,12 @@ module.exports = function (router) {
                         switch (err.message) {
                             case 'User does not exist':
                                 res.status(404).json({
-                                    message: 'User does not exist.'
+                                    message: err.message
                                 });
                                 break;
                             case 'Invalid credentials':
                                 res.status(401).json({
-                                    message: 'Invalid credentials.'
+                                    message: err.message
                                 });
                                 break;
                             default:
@@ -113,17 +113,17 @@ module.exports = function (router) {
                 switch (err.message) {
                     case 'Invalid token endpoint':
                         res.status(401).json({
-                            message: 'Invalid token endpoint'
+                            message: err.message
                         });
                         break;
                     case 'You do not have access to this API':
                         res.status(401).json({
-                            message: 'You do not have access to this API.'
+                            message: err.message
                         });
                         break;
                     case 'Token blacklisted':
                         res.status(401).json({
-                            message: 'Token blacklisted'
+                            message: err.message
                         });
                         break;
                     default:
