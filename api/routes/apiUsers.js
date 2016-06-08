@@ -44,9 +44,9 @@ module.exports = function (router) {
     **/
     router.route('/user')
         .get(function (req, res) {
-            if(req.query && req.query.api_id) {
+            if(req.query && req.query.apiId) {
                 ApiUser.forge({
-                    api_id: req.query.api_id
+                    api_id: req.query.apiId
                 })
                 .fetch()
                 .then((model) => {
