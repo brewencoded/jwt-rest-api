@@ -1,8 +1,11 @@
-const ApiUser = require('../models/apiUser'),
+const db = require('../models/db'),
+    ApiUser = require('../models/apiUser'),
     ApiOrder = require('../models/apiOrder'),
     ApiOrderItem = require('../models/apiOrderItem'),
     moment = require('moment'),
-    jwt = require('../auth/jwt');
+    jwt = require('../auth/jwt'),
+    BPromise = require('bluebird'),
+    validator = require('../util/validator');
 
 module.exports = function (router) {
     /**
@@ -35,41 +38,59 @@ module.exports = function (router) {
     router.route('/order')
         .post(function (req, res) { // create new order
             if(req.body && req.body.api_id && req.body.order && req.body.order.items) {
-                ApiUser.forge({
-                    api_id: req.body.api_id
-                })
-                .fetch()
-                .then((model) => {
-                    if(!model) {
-                        throw new Error('User does not exist');
-                    } else if (req.decoded.apiId !== model.attributes.api_id) {
-                        throw new Error('You do not have permission to access this user');
-                    } else {
-                        return ApiOrder.forge({
-                            api_id: model.attributes.api_id
-                        }).save();
-                    }
-                })
-                .then((model) => {
-
-                    // create order items
-                })
-                .catch((err) => {
-                    switch (err.message) {
-                        case 'You do not have permission to access this user':
-                            res.status(403).json({
-                                message: err.message
+                if(validator.invalidItems(req.order.items)) {
+                    res.status(400).json({
+                        message: 'One or more of the items on your order is improperly formatted or missing arguments'
+                    });
+                } else {
+                    ApiUser.forge({
+                        api_id: req.body.api_id
+                    })
+                    .fetch()
+                    .then((model) => {
+                        if(!model) {
+                            throw new Error('User does not exist');
+                        } else if (req.decoded.apiId !== model.attributes.api_id) {
+                            throw new Error('You do not have permission to access this user');
+                        } else {
+                            return ApiOrder.forge({
+                                api_id: model.attributes.api_id
+                            }).save();
+                        }
+                    })
+                    .then((model) => {
+                        return db.transaction(function (transaction) {
+                            return BPromise.map(req.body.order.items, function (item) {
+                                return ApiOrderItem.forge({
+                                    transaction_id: model.attributes.transaction_id,
+                                    name: item.name,
+                                    size: item.size,
+                                    price: item.price,
+                                    quantity: item.quantity
+                                }).save(null, {transacting: transaction});
                             });
-                            break;
-                        case 'User does not exist':
-                            res.status(404).json({
-                                message: err.message
-                            });
-                            break;
-                        default:
-                            serverError(res, err);
-                    }
-                });
+                        });
+                    })
+                    .then((result) => {
+                        console.log(result);
+                    })
+                    .catch((err) => {
+                        switch (err.message) {
+                            case 'You do not have permission to access this user':
+                                res.status(403).json({
+                                    message: err.message
+                                });
+                                break;
+                            case 'User does not exist':
+                                res.status(404).json({
+                                    message: err.message
+                                });
+                                break;
+                            default:
+                                serverError(res, err);
+                        }
+                    });
+                }
             } else {
                 missingParams(res);
             }
