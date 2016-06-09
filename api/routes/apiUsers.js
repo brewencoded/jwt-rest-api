@@ -77,7 +77,7 @@ module.exports = function (router) {
             }
         })
         .put(function (req, res) {
-            if(req.body && req.body.api_id && req.body.updates && req.body.updates.length > 0) {
+            if(req.body && req.body.api_id && req.body.updates) {
                 ApiUser.forge({
                     api_id: req.body.api_id
                 })
