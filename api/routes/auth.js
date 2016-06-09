@@ -1,7 +1,7 @@
 const jwt = require('../auth/jwt'),
     basicAuth = require('basic-auth'),
     hash = require('../auth/hash'),
-    ApiUser = require('../models/ApiUser'),
+    ApiUser = require('../models/apiUser'),
     db = require('../config').db,
     knex = require('knex')({
         client: db.client,

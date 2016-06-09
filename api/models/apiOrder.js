@@ -1,6 +1,6 @@
 const bookshelf = require('./db');
 
-require('./ApiOrderItem');
+require('./apiOrderItem');
 
 const ApiOrder = bookshelf.Model.extend({
     tableName: 'ApiOrders',
