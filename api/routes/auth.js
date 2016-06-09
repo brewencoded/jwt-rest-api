@@ -25,11 +25,13 @@ module.exports = function (router) {
                     })
                     .fetch()
                     .then((model) => {
-                        if (model) {
+                        if (!model) {
+                            throw new Error('User does not exist');
+                        } else if (model.attributes.disabled === true) {
+                            throw new Error('This user is currently disabled. Contact support if you wish to reenable this account');
+                        }  else {
                             const attrs = model.attributes;
                             return hash.compareHash(key, attrs.key);
-                        } else {
-                            throw new Error('User does not exist');
                         }
                     })
                     .then((keysMatch) => {
@@ -59,6 +61,10 @@ module.exports = function (router) {
                                     message: err.message
                                 });
                                 break;
+                            case 'This user is currently disabled. Contact support if you wish to reenable this account':
+                            res.status(409).json({
+                                message: err.message
+                            })
                             default:
                                 res.status(500).json({
                                     message: 'Something went wrong. If you are receiving this message please contact the maintainer.',
