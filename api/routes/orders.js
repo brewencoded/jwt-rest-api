@@ -5,7 +5,7 @@ const db = require('../models/db'),
     moment = require('moment'),
     jwt = require('../auth/jwt'),
     BPromise = require('bluebird'),
-    validator = require('../util/validator');
+    validator = require('../util/inputValidation');
 
 module.exports = function (router) {
     /**
@@ -38,7 +38,7 @@ module.exports = function (router) {
     router.route('/order')
         .post(function (req, res) { // create new order
             if(req.body && req.body.api_id && req.body.order && req.body.order.items) {
-                if(validator.invalidItems(req.order.items)) {
+                if(!validator.invalidItems(req.body.order.items)) {
                     res.status(400).json({
                         message: 'One or more of the items on your order is improperly formatted or missing arguments'
                     });
@@ -72,7 +72,9 @@ module.exports = function (router) {
                         });
                     })
                     .then((result) => {
-                        console.log(result);
+                        res.status(200).json({
+                            message: 'Successfully added order'
+                        });
                     })
                     .catch((err) => {
                         switch (err.message) {

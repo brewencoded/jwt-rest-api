@@ -18,6 +18,8 @@ const express = require('express'),
 require('./api/routes/auth')(pubRouter);
 // users routes
 require('./api/routes/apiUsers')(pubRouter);
+// public orders route
+require('./api/routes/orders')(pubRouter);
 
 // TODO: private api
 
